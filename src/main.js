@@ -5,15 +5,21 @@ import { makeComputerMove, populateComputerBoard } from './computer.js'
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+const shipDiv = document.querySelector(".ships");
+const setupContainer = document.querySelector(".setup-container");
+const rotateBtn = document.querySelector("#rotate-btn");
+const startBtn = document.querySelector("#start-btn");
+
 const playerBoard = document.querySelector("#player-board");
 const computerBoard = document.querySelector("#computer-board");
 
 const player = new Player('player');
 const computer = new Player('computer');
 
-player.gameboard.placeShip(2, 3, new Ship(8), true);
-populateComputerBoard(computer.gameboard);
-updateUI();
+let isHorizontal = true;
+let draggedShipLength = null;
+let draggedShipElement = null;
+let gameStarted = false;
 
 function renderBoard(gameboard, container, isEnemy) {
     container.innerHTML = '';
@@ -56,9 +62,74 @@ function updateUI() {
     renderBoard(computer.gameboard, computerBoard, true);
 }
 
+computerBoard.style.pointerEvents = 'none';
 updateUI();
 
+rotateBtn.addEventListener("click", () => {
+    isHorizontal = !isHorizontal;
+    rotateBtn.textContent = `Axis: ${isHorizontal ? 'Horizontal' : 'Vertical'}`;
+});
+
+shipDiv.addEventListener('dragstart', (e) => {
+    const shipEl = e.target.closest('.draggable-ship');
+    if (!shipEl) return;
+
+    draggedShipElement = shipEl;
+    draggedShipLength = Number(shipEl.dataset.length);
+    e.dataTransfer.setData('text/plain', draggedShipLength)
+});
+
+playerBoard.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+
+playerBoard.addEventListener('dragenter', (e) => {
+    const cell = e.target.closest(".cell");
+    if (cell) cell.classList.add('drag-over');
+});
+
+playerBoard.addEventListener('dragleave', (e) => {
+    const cell = e.target.closest(".cell");
+    if (cell) cell.classList.remove('drag-over');
+});
+
+playerBoard.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const cell = e.target.closest('.cell');
+    if (!cell || !draggedShipLength) return;
+
+    cell.classList.remove('drag-over');
+
+    const x = Number(cell.dataset.x);
+    const y = Number(cell.dataset.y);
+
+    const ship = new Ship(draggedShipLength);
+    const success = player.gameboard.placeShip(x, y, ship, isHorizontal);
+
+    if (success) {
+        draggedShipElement.remove();
+        draggedShipElement = null;
+        draggedShipLength = null;
+
+        updateUI();
+
+        if (shipDiv.children.length === 0) startBtn.disabled = false;
+    }
+});
+
+startBtn.addEventListener("click", () => {
+    gameStarted = true;
+    populateComputerBoard(computer.gameboard);
+
+    setupContainer.style.display = 'none';
+    computerBoard.style.pointerEvents = 'auto';
+
+    updateUI();
+});
+
 computerBoard.addEventListener("click", async (e) => {
+    if (!gameStarted) return;
+
     const cell = e.target.closest('.cell');
     if (!cell) return;
 
@@ -79,7 +150,7 @@ computerBoard.addEventListener("click", async (e) => {
         return;
     }
 
-    if (playerHit){
+    if (playerHit) {
         updateUI();
         return;
     }
@@ -105,7 +176,9 @@ computerBoard.addEventListener("click", async (e) => {
 
         if (player.gameboard.allSunk()) {
             alert('Game Over!');
+            computerBoardElement.style.pointerEvents = 'none';
             updateUI();
+            return;
         }
 
         if (!computerHit) {

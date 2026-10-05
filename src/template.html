@@ -9,20 +9,33 @@
 
 <body>
     <main>
-        <div class="container">
-            <h1>Battleship</h1>
-            <div class="ships"></div>
-            <div class="boards">
-                <div class="boards-container">
-                    <div id="player-board"></div>
-                    <p>You</p>
-                </div>
-                <div class="boards-container">
-                    <div id="computer-board"></div>
-                    <p>Computer</p>
-                </div>
+        <h1>Battleship</h1>
+        <div class="setup-container">
+            <h2>Place Your Ships</h2>
+
+            <div class="setup-controls">
+                <button id="rotate-btn">Axis: Horizontal</button>
+                <button id="start-btn" disabled>Start Game</button>
+            </div>
+            <div class="ships">
+                <div class="draggable-ship" data-length="5" draggable="true">Inferno</div>
+                <div class="draggable-ship" data-length="4" draggable="true">Blaze</div>
+                <div class="draggable-ship" data-length="3" draggable="true">Flame</div>
+                <div class="draggable-ship" data-length="2" draggable="true">Ember</div>
+                <div class="draggable-ship" data-length="1" draggable="true">Spark</div>
             </div>
         </div>
+        <div class="boards">
+            <div class="boards-container">
+                <div id="player-board"></div>
+                <p>You</p>
+            </div>
+            <div class="boards-container">
+                <div id="computer-board"></div>
+                <p>Computer</p>
+            </div>
+        </div>
+
     </main>
 </body>
 
