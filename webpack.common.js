@@ -2,7 +2,7 @@ import path from "node:path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
 export default {
-    entry: "./src/index.js",
+    entry: "./src/main.js",
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/template.html",

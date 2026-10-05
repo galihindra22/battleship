@@ -5,113 +5,47 @@
     margin: 0;
 }
 
-body {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+h1,
+p {
+    text-align: center;
+    margin-bottom: 60px;
+    margin-top: 20px;
 }
 
-aside {
-    background-color: lightgray;
+p {
+    font-size: 20px;
 }
 
-.projects {
-    padding: 10px;
+.boards {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: center;
+    gap: 100px;
 }
 
-h2{
-    align-self: center;
-}
-
-#collapse-add-project {
-    flex: 0 0 auto;
-    width: max-content;
-    align-self: center;
-}
-
-#new-project-form label {
-    display: block;
-    width: 100%;
-}
-
-#new-project-form input {
-    width: 60%;
-}
-
-.container {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: pink;
-}
-
-.container header {
-    align-self: center;
-}
-
-.container #todo-title{
-    width: 40%;
-}
-
-.container button,
-.container select, #todo-date{
-    width: max-content;
-}
-
-.container button {
-    align-self: center;
-}
-
-.todo-form-content,
-.project-form-content {
-    display: none;
-}
-
-#new-todo-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.content-list{
+#player-board,
+#computer-board {
     display: grid;
-    grid-template-columns: 20px 1fr 2fr 1fr 1fr 60px 60px;
-    gap: 10px;
+    grid-template-columns: repeat(10, 35px);
+    grid-template-rows: repeat(10, 35px);
+    gap: 2px;
 }
 
-.content-list > p, .todo-card :not(form){
-    background-color: antiquewhite;
+.cell {
+    width: 35px;
+    height: 35px;
+    background-color: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
 }
 
-#task-column{
-    grid-column: 2/3;
+.cell.ship {
+    background-color: #475569;
 }
 
-#todo-list{
-    grid-column: 1/-1;
-    display: grid;
-    grid-template-columns: subgrid;  
-    row-gap: 10px;
+.cell.miss {
+    background-color: #93c5fd;
 }
 
-.todo-card{
-    display: grid;
-    grid-column: 1/-1;
-    grid-template-columns: subgrid;
+.cell.hit {
+    background-color: #ef4444;
 }
-
-.edit-todo-form {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-column: 1/-1;
-    gap: 8px;
-    width: 100%;
-}
-
-.edit-todo-form > input[type="text"]{
-    grid-column: 2/3;
-}
-
