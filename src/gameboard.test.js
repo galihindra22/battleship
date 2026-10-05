@@ -33,8 +33,8 @@ test("allSunk() returns true when all ships sunk", () => {
     const ship1 = new Ship(3);
     const ship2 = new Ship(2);
 
-    board.placeShip(0, 0, ship1);
-    board.placeShip(0, 2, ship2);
+    board.placeShip(0, 0, ship1, true);
+    board.placeShip(0, 2, ship2, true);
 
     //sink ship1
     board.receiveAttack(0, 0);

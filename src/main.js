@@ -85,7 +85,10 @@ playerBoard.addEventListener('dragover', (e) => {
 
 playerBoard.addEventListener('dragenter', (e) => {
     const cell = e.target.closest(".cell");
-    if (cell) cell.classList.add('drag-over');
+    if (cell){
+        playerBoard.querySelectorAll('.cell.drag-over').forEach(c => c.classList.remove('drag-over'));
+        cell.classList.add('drag-over');
+    }
 });
 
 playerBoard.addEventListener('dragleave', (e) => {
@@ -176,7 +179,7 @@ computerBoard.addEventListener("click", async (e) => {
 
         if (player.gameboard.allSunk()) {
             alert('Game Over!');
-            computerBoardElement.style.pointerEvents = 'none';
+            computerBoard.style.pointerEvents = 'none';
             updateUI();
             return;
         }
