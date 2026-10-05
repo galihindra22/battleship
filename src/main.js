@@ -1,7 +1,7 @@
 import './styles.css';
 import { Player } from "./player.js";
 import { Ship } from "./ship.js";
-import { makeComputerMove } from './computer.js'
+import { makeComputerMove, populateComputerBoard } from './computer.js'
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -11,8 +11,9 @@ const computerBoard = document.querySelector("#computer-board");
 const player = new Player('player');
 const computer = new Player('computer');
 
-player.gameboard.placeShip(2, 3, new Ship(8));
-computer.gameboard.placeShip(0, 0, new Ship(3));
+player.gameboard.placeShip(2, 3, new Ship(8), true);
+populateComputerBoard(computer.gameboard);
+updateUI();
 
 function renderBoard(gameboard, container, isEnemy) {
     container.innerHTML = '';
@@ -103,7 +104,7 @@ computerBoard.addEventListener("click", async (e) => {
         updateUI();
 
         if (player.gameboard.allSunk()) {
-            alert('Game Over! The computer sunk all your ships!');
+            alert('Game Over!');
             updateUI();
         }
 

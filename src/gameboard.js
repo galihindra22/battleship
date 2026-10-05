@@ -7,12 +7,29 @@ class Gameboard {
         this.missedShots = [];
         this.successfulShots = [];
     }
-    placeShip(x, y, ship) {
-        this.ships.push(ship);
+    placeShip(x, y, ship, isHorizontal) {
+        const coordinates = [];
         for (let i = 0; i < ship.length; i++) {
-            const key = `${x + i},${y}`;
-            this.board[key] = ship;
+            const currentX = isHorizontal ? x + i : x;
+            const currentY = isHorizontal ? y : y + i;
+
+            if (currentX < 0 || currentX >= 10 || currentY < 0 || currentY >= 10) {
+                return false;
+            }
+
+            const key = `${currentX},${currentY}`;
+            if (this.board[key]) {
+                return false;
+            }
+            coordinates.push(key);
         }
+        
+        this.ships.push(ship);
+        coordinates.forEach((key) =>{
+            this.board[key] = ship;
+        });
+
+        return true;
     }
     getShipAt(x, y) {
         const key = `${x},${y}`;
@@ -22,7 +39,7 @@ class Gameboard {
         const alreadyMissed = this.missedShots.some(([missX, missY]) => missX === x && missY === y);
         const alreadyHit = this.successfulShots.some(([hitX, hitY]) => hitX === x && hitY === y);
 
-        if(alreadyMissed || alreadyHit) return false;
+        if (alreadyMissed || alreadyHit) return false;
 
         const targetShip = this.getShipAt(x, y);
 

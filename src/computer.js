@@ -1,3 +1,5 @@
+import { Ship } from "./ship.js";
+
 let targetQueue = [];
 let originHit = null;
 let currentDirection = null;
@@ -116,4 +118,26 @@ export function resetComputer() {
     targetQueue = [];
     originHit = null;
     currentDirection = null;
+}
+export function populateComputerBoard(gameboard) {
+    const shipLenghts = [5, 4, 3, 2, 1];
+
+    shipLenghts.forEach((length) => {
+        let placed = false;
+        while (!placed) {
+            const isHorizontal = Math.random() < 0.5;
+
+            const x = isHorizontal ?
+                Math.floor(Math.random() * (10 - length + 1)) :
+                Math.floor(Math.random() * 10);
+            const y = isHorizontal ?
+                Math.floor(Math.random() * (10 - length + 1)) :
+                Math.floor(Math.random() * 10);
+
+            const ship = new Ship(length);
+            const success = gameboard.placeShip(x, y, ship, isHorizontal);
+
+            if(success) placed = true;
+        }
+    });
 }
