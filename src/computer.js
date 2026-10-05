@@ -1,4 +1,6 @@
 let targetQueue = [];
+let originHit = null;
+let currentDirection = null;
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -9,16 +11,16 @@ function shuffleArray(array) {
 }
 export function makeComputerMove(gameboard) {
     let x, y;
-    let successfulAttack = false;
+    let attackValid = false;
 
-    while (!successfulAttack) {
+    if (targetQueue.length === 0) {
+        originHit = null;
+        currentDirection = null;
+    }
+
+    while (!attackValid) {
         if (targetQueue.length > 0) {
-            const nextTarget = targetQueue.shift();
-            if (nextTarget && typeof nextTarget[0] === 'number' && typeof nextTarget[1] === 'number') {
-                [x, y] = nextTarget;
-            } else {
-                continue;
-            }
+            [x, y] = targetQueue.shift();
         } else {
             x = Math.floor(Math.random() * 10);
             y = Math.floor(Math.random() * 10);
@@ -32,7 +34,7 @@ export function makeComputerMove(gameboard) {
         );
 
         if (!alreadyMissed && !alreadyHit) {
-            successfulAttack = true;
+            attackValid = true;
         }
     }
 
@@ -43,33 +45,75 @@ export function makeComputerMove(gameboard) {
     );
 
     if (wasHit) {
-        const neighbors = [
-            [x, y - 1], [x, y + 1], [x - 1, y], [x + 1, y],
-        ];
-        
-        const randomizedNeighbors = shuffleArray(neighbors);
+        if (!originHit) {
+            originHit = [x, y];
 
-        randomizedNeighbors.forEach(([nX, nY]) => {
-            if (nX >= 0 && nX < 10 && nY >= 0 && nY < 10) {
-                const isMissed = gameboard.missedShots.some(
-                    ([mX, mY]) => mX === nX && mY === nY
+            const potentialNeighbors = shuffleArray([
+                [x, y - 1], [x, y + 1], [x - 1, y], [x + 1, y],
+            ]);
+
+            potentialNeighbors.forEach(([nX, nY]) => {
+                if (nX >= 0 && nX < 10 && nY >= 0 && nY < 10) {
+                    const isM = gameboard.missedShots.some(([mX, mY]) => mX === nX && mY === nY);
+                    const isH = gameboard.successfulShots.some(([hX, hY]) => hX === nX && hY === nY);
+                    const isQ = targetQueue.some(([qX, qY]) => qX === nX && qY === nY);
+
+                    if (!isM && !isH && !isQ) {
+                        targetQueue.push([nX, nY]);
+                    }
+                }
+            });
+        } else {
+            const dx = Math.sign(x - originHit[0]);
+            const dy = Math.sign(y - originHit[1]);
+            currentDirection = [dx, dy];
+
+            const nextX = x + dx;
+            const nextY = y + dy;
+
+            if (nextX >= 0 && nextX < 10 && nextY >= 0 && nextY < 10) {
+                const isM = gameboard.missedShots.some(
+                    ([mX, mY]) => mX === nextX && mY === nextY
                 );
-                const isHit = gameboard.successfulShots.some(
-                    ([hX, hY]) => hX === nX && hY === nY
-                );
-                const isQueued = targetQueue.some(
-                    ([qX, qY]) => qX === nX && qY === nY
+                const isH = gameboard.successfulShots.some(
+                    ([hX, hY]) => hX === nextX && hY === nextY
                 );
 
-                if (!isMissed && !isHit && !isQueued) {
-                    targetQueue.push([nX, nY]);
+                if (!isM && !isH) {
+                    targetQueue.unshift([nextX, nextY]);
                 }
             }
-        });
+
+            const reverseX = originHit[0] - dx;
+            const reverseY = originHit[1] - dy;
+
+            if (reverseX >= 0 && reverseX < 10 && reverseY >= 0 && reverseY < 10) {
+                const isM = gameboard.missedShots.some(([mX, mY]) => mX === reverseX && mY === reverseY);
+                const isH = gameboard.successfulShots.some(([hX, hY]) => hX === reverseX && hY === reverseY);
+
+                if (!isM && !isH) {
+                    targetQueue.push([reverseX, reverseY]);
+                }
+            }
+        }
+    } else if (currentDirection && originHit) {
+        const [dx, dy] = currentDirection;
+        const reverseX = originHit[0] - dx;
+        const reverseY = originHit[1] - dy;
+
+        if (reverseX >= 0 && reverseX < 10 && reverseY >= 0 && reverseY < 10) {
+            const isM = gameboard.missedShots.some(([mX, mY]) => mX === reverseX && mY === reverseY);
+            const isH = gameboard.successfulShots.some(([hX, hY]) => hX === reverseX && hY === reverseY);
+
+            if (!isM && !isH) {
+                targetQueue.unshift([reverseX, reverseY]);
+            }
+        }
     }
     return [x, y];
 }
-
 export function resetComputer() {
     targetQueue = [];
+    originHit = null;
+    currentDirection = null;
 }

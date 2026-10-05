@@ -3,6 +3,8 @@ import { Player } from "./player.js";
 import { Ship } from "./ship.js";
 import { makeComputerMove } from './computer.js'
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 const playerBoard = document.querySelector("#player-board");
 const computerBoard = document.querySelector("#computer-board");
 
@@ -55,7 +57,7 @@ function updateUI() {
 
 updateUI();
 
-computerBoard.addEventListener("click", (e) => {
+computerBoard.addEventListener("click", async (e) => {
     const cell = e.target.closest('.cell');
     if (!cell) return;
 
@@ -81,10 +83,17 @@ computerBoard.addEventListener("click", (e) => {
         return;
     }
 
+    updateUI();
+
+    computerBoard.style.pointerEvents = 'none';
+
     //computer turn
     let computerTurn = true;
 
     while (computerTurn) {
+
+        await sleep(300);
+
         const previousComputerHits = player.gameboard.successfulShots.length;
 
         makeComputerMove(player.gameboard);
@@ -102,4 +111,5 @@ computerBoard.addEventListener("click", (e) => {
             computerTurn = false;
         }
     }
+    computerBoard.style.pointerEvents = 'auto';
 });
