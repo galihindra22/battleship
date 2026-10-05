@@ -5,9 +5,6 @@ class Player{
         this.type = type;
         this.gameboard = new Gameboard();
     }
-    attack(x, y, gameboard){
-        gameboard.receiveAttack(x, y);
-    }
 }
 
 export {Player};

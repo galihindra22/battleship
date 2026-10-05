@@ -1,17 +1,16 @@
 import './styles.css';
 import { Player } from "./player.js";
 import { Ship } from "./ship.js";
+import { makeComputerMove } from './computer.js'
 
 const playerBoard = document.querySelector("#player-board");
 const computerBoard = document.querySelector("#computer-board");
 
 const player = new Player('player');
 const computer = new Player('computer');
-const ship1 = new Ship(3);
-const ship2 = new Ship(3);
 
-player.gameboard.placeShip(2, 3, ship1);
-computer.gameboard.placeShip(0, 0, ship2);
+player.gameboard.placeShip(2, 3, new Ship(8));
+computer.gameboard.placeShip(0, 0, new Ship(3));
 
 function renderBoard(gameboard, container, isEnemy) {
     container.innerHTML = '';
@@ -33,14 +32,14 @@ function renderBoard(gameboard, container, isEnemy) {
             );
 
             const isHit = gameboard.successfulShots.some(
-                ([hX, hY]) => hX === x && hY === y
+                ([hitX, hitY]) => hitX === x && hitY === y
             );
 
             if (isMiss) {
                 cell.classList.add('miss');
             } else if (isHit) {
                 cell.classList.add('hit');
-            }else if (ship && !isEnemy){
+            } else if (ship && !isEnemy) {
                 cell.classList.add('ship');
             }
 
@@ -49,26 +48,58 @@ function renderBoard(gameboard, container, isEnemy) {
     }
 }
 
-function updateUI(){
+function updateUI() {
     renderBoard(player.gameboard, playerBoard, false);
     renderBoard(computer.gameboard, computerBoard, true);
 }
 
 updateUI();
 
-computerBoard.addEventListener("click", (e) =>{
+computerBoard.addEventListener("click", (e) => {
     const cell = e.target.closest('.cell');
-    if(!cell) return;
+    if (!cell) return;
 
     const x = Number(cell.dataset.x);
     const y = Number(cell.dataset.y);
 
+    //player turn
+    const previousPlayerHits = computer.gameboard.successfulShots.length;
     const isAttackValid = computer.gameboard.receiveAttack(x, y);
-    if(!isAttackValid) return;
-    
-    if(computer.gameboard.allSunk()){
+    if (!isAttackValid) return;
+
+    const playerHit = computer.gameboard.successfulShots.length > previousPlayerHits;
+
+    //wincon
+    if (computer.gameboard.allSunk()) {
         alert('Victory!');
+        updateUI();
+        return;
     }
 
-    updateUI();
+    if (playerHit){
+        updateUI();
+        return;
+    }
+
+    //computer turn
+    let computerTurn = true;
+
+    while (computerTurn) {
+        const previousComputerHits = player.gameboard.successfulShots.length;
+
+        makeComputerMove(player.gameboard);
+
+        const computerHit = player.gameboard.successfulShots.length > previousComputerHits;
+
+        updateUI();
+
+        if (player.gameboard.allSunk()) {
+            alert('Game Over! The computer sunk all your ships!');
+            updateUI();
+        }
+
+        if (!computerHit) {
+            computerTurn = false;
+        }
+    }
 });
