@@ -1,113 +1,112 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
-    margin: 0;
+  box-sizing: border-box;
+  margin: 0;
 }
 
-h1{
-    font-size: 40px;
+h1 {
+  font-size: 40px;
 }
 h1,
 p,
 .draggable-ship {
-    text-align: center;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    font-family: monospace;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-family: monospace;
 }
 
 .setup-controls {
-    margin: 10px;
-    display: flex;
-    gap: 12px;
-    justify-self: center;
+  margin: 10px;
+  display: flex;
+  gap: 12px;
+  justify-self: center;
 }
 
 h2,
 button {
-    text-align: center;
-    font-family: monospace;
-    justify-self: center;
+  text-align: center;
+  font-family: monospace;
+  justify-self: center;
 }
 
-
 p {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 button {
-    background-color: #0284c7;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  background-color: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 button:hover:not(:disabled) {
-    background-color: #0369a1;
+  background-color: #0369a1;
 }
 
 button:disabled {
-    background-color: #475569;
-    color: #94a3b8;
-    cursor: not-allowed;
+  background-color: #475569;
+  color: #94a3b8;
+  cursor: not-allowed;
 }
 
 .draggable-ship {
-    padding: 4px 6px;
-    margin: 6px;
-    background-color: #4a5568;
-    color: white;
-    cursor: grab;
-    border-radius: 4px;
-    user-select: none;
+  padding: 4px 6px;
+  margin: 6px;
+  background-color: #4a5568;
+  color: white;
+  cursor: grab;
+  border-radius: 4px;
+  user-select: none;
 }
 
 .ships {
-    display: grid;
-    grid-template-columns: 5fr 4fr 3fr 2fr 1fr;
-    width: 70%;
-    justify-self: center;
-    margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 5fr 4fr 3fr 2fr 1fr;
+  width: 70%;
+  justify-self: center;
+  margin-bottom: 20px;
 }
 
 .boards {
-    display: flex;
-    justify-content: center;
-    gap: 100px;
+  display: flex;
+  justify-content: center;
+  gap: 100px;
 }
 
 #player-board,
 #computer-board {
-    display: grid;
-    grid-template-columns: repeat(10, 35px);
-    grid-template-rows: repeat(10, 35px);
-    gap: 2px;
+  display: grid;
+  grid-template-columns: repeat(10, 35px);
+  grid-template-rows: repeat(10, 35px);
+  gap: 2px;
 }
 
 .cell {
-    width: 35px;
-    height: 35px;
-    background-color: #e2e8f0;
-    border: 1px solid #cbd5e1;
-    cursor: pointer;
+  width: 35px;
+  height: 35px;
+  background-color: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
 }
 
 .cell.ship {
-    background-color: #475569;
+  background-color: #475569;
 }
 
 .cell.miss {
-    background-color: #93c5fd;
+  background-color: #93c5fd;
 }
 
 .cell.hit {
-    background-color: #ef4444;
+  background-color: #ef4444;
 }
 
 .cell.drag-over {
