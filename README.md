@@ -7,3 +7,5 @@ A browser-based implementation of the board game Battleship with computer as opp
 - Jest
 - ESLint & Prettier
 - Webpack
+
+Live site: galihindra22.github.io/battleship
